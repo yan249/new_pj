@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Class101 수요조사 달성 클래스</title>
+  <!-- CSS 파일 넣기 -->
+
+  <!-- 메타 태그 -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+  <!-- JQuery를 import 합니다 -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
+  <script type="text/javascript" src="../scripts/jquery-1.11.0.js"></script>
+  <script type="text/javascript" src="../scripts/jquery.table2excel.js"></script>
+  <script type="text/javascript" src="../static/datatables.min.js"></script>
+  <!-- 부트스트랩 CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous" />
+  <link href="https://fonts.googleapis.com/css?family=Single+Day&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='datatables.min.css') }}">
+
+  <!-- java script -->
+  <script type="text/javascript">
+      $(document).ready( function () {
+    $('TableToExcel').DataTable();
+} );
+    function f1() {
+      $("#list").empty();
+      $.ajax({
+        type: "GET",
+        url: "/class101",
+        data: {},
+        success: function (response) {
+          response = JSON.parse(response);
+          if (response["result"] == "success") {
+            let list = response["data"];
+
+            for (let i = 0; i < list.length; i++) {
+              let firstdate = new Date(list[i]["firstdate"]["$date"])
+                .toISOString()
+                .split("T")[0];
+              let modate = new Date(list[i]["modate"]["$date"])
+                .toISOString()
+                .split("T")[0];
+              let category = list[i]["category"];
+              let creator = list[i]["creator"];
+              let title = list[i]["title"];
+              let like = list[i]["like"];
+              let goal = list[i]["goal"];
+              let link = list[i]["link"];
+
+              $("#list").append(`<tr>
+                  <td>${firstdate}</td>
+                  <td>${modate}</td>
+                  <td>${category}</td>
+                  <td>${creator}</td>
+                  <td>${title}</td>
+                  <td>${like}</td>
+                  <td>${goal}</td>
+                  <td> <a href='http://${link}' target="_blank"> 링크 </a> </td>
+                </tr>`);
+            }
+          }
+        },
+      });
+    }
+  </script>
+  <!-- 스타일 -->
+  <style>
+    .wrap {
+      width: 1400px;
+      margin: auto;
+      text-align: center;
+    }
+
+    table {
+      width: 100%;
+      background-color: #f1f1f2;
+    }
+
+    table>thead>tr>th {
+      padding: 10px;
+      font-weight: 400;
+      color: black;
+      background-color: white;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+    }
+
+    table>tbody>tr>td {
+      padding: 10px;
+      font-size: small;
+      text-align: center;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+    }
+
+    .container {
+      height: 700px;
+      overflow: auto;
+    }
+
+    .fixedHeader {
+      position: sticky;
+      top: 0;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <br />
+    <!-- YN 추가 이미지랑 글이랑 나란히 놓는것 하고싶음 ㅎ-->
+    <img src=https://class101.net/images/class101-main-logo.svg>
+    <h3>수요조사 100% 달성 리스트</h3>
+    <br />
+    <!--YN 변경-->
+    <button type="button" class="btn btn-dark" onclick="f1()">
+      업데이트
+    </button>
+    <input type='button' class='btn btn-inverse' value='excel 다운' style='width:100px;height:36px;font-weight:bold;' onclick="ReportToExcelConverter()" />
+    <!--YN 추가-->
+    <hr />
+    <div class="container">
+      <table id="TableToExcel" class='table table-bordered'>
+        <thead>
+          <tr>
+            <th class="fixedHeader">최초 DB입력</th>
+            <th class="fixedHeader">DB 업데이트</th>
+            <th class="fixedHeader">카테고리</th>
+            <th class="fixedHeader">크리에이터</th>
+            <th class="fixedHeader">클래스명</th>
+            <th class="fixedHeader">응원수</th>
+            <th class="fixedHeader">달성률</th>
+            <th class="fixedHeader">링크</th>
+          </tr>
+        </thead>
+        <tbody id="list">
+          <tr>
+            <td>2020. 04.13</td>
+            <td>2020. 04.15</td>
+            <td>커리어</td>
+            <td>천사</td>
+            <td>무자본 창업</td>
+            <td>12</td>
+            <td>100%</td>
+            <td>www.class101.net</td>
+          </tr>
+          <tr>
+            <td>2020. 04.13</td>
+            <td>2020. 04.15</td>
+            <td>커리어</td>
+            <td>천사</td>
+            <td>무자본 창업</td>
+            <td>12</td>
+            <td>100%</td>
+            <td>www.class101.net</td>
+          </tr>
+          <tr>
+            <td>2020. 04.13</td>
+            <td>2020. 04.15</td>
+            <td>커리어</td>
+            <td>천사</td>
+            <td>무자본 창업</td>
+            <td>12</td>
+            <td>100%</td>
+            <td>www.class101.net</td>
+          </tr>
+          <tr>
+            <td>2020. 04.13</td>
+            <td>2020. 04.15</td>
+            <td>커리어</td>
+            <td>천사</td>
+            <td>무자본 창업</td>
+            <td>12</td>
+            <td>100%</td>
+            <td>www.class101.net</td>
+          </tr>
+          <tr>
+            <td>2020. 04.13</td>
+            <td>2020. 04.15</td>
+            <td>커리어</td>
+            <td>천사</td>
+            <td>무자본 창업</td>
+            <td>12</td>
+            <td>100%</td>
+            <td>www.class101.net</td>
+          </tr>
+          <tr>
+            <td>2020. 04.13</td>
+            <td>2020. 04.15</td>
+            <td>커리어</td>
+            <td>천사</td>
+            <td>무자본 창업</td>
+            <td>12</td>
+            <td>100%</td>
+            <td>www.class101.net</td>
+          </tr>
+          <tr>
+            <td>2020. 04.13</td>
+            <td>2020. 04.15</td>
+            <td>커리어</td>
+            <td>천사</td>
+            <td>무자본 창업</td>
+            <td>12</td>
+            <td>100%</td>
+            <td>www.class101.net</td>
+          </tr>
+          <tr>
+            <td>2020. 04.13</td>
+            <td>2020. 04.15</td>
+            <td>커리어</td>
+            <td>천사</td>
+            <td>무자본 창업</td>
+            <td>12</td>
+            <td>100%</td>
+            <td>www.class101.net</td>
+          </tr>
+          <tr>
+            <td>2020. 04.13</td>
+            <td>2020. 04.15</td>
+            <td>커리어</td>
+            <td>천사</td>
+            <td>무자본 창업</td>
+            <td>12</td>
+            <td>100%</td>
+            <td>www.class101.net</td>
+          </tr>
+          <tr>
+            <td>2020. 04.13</td>
+            <td>2020. 04.15</td>
+            <td>커리어</td>
+            <td>천사</td>
+            <td>무자본 창업</td>
+            <td>12</td>
+            <td>100%</td>
+            <td>www.class101.net</td>
+          </tr>
+        </tbody>
+      </table>
+      <iframe id="txtArea1" style="display:none"></iframe>
+    </div>
+  </div>
+</body>
+<script>
+	function ReportToExcelConverter() {
+		$("#TableToExcel").table2excel({
+			exclude: ".noExl",
+			name: "Excel Document Name",
+			filename: "report" +'.xls', //확장자를 여기서 붙여줘야한다.
+			fileext: ".xls",
+			exclude_img: true,
+			exclude_links: true,
+			exclude_inputs: true
+		});
+	};
+</script>
+
+</html>
